@@ -20,18 +20,29 @@
       <th>Email</th>
       <th>Message</th>
       <th>Date</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody id="messages"></tbody>
 </table>
 
 <script>
-async function loadMessages() {
-  const res = await fetch(
-    "https://contact-form-api.junior-webdev-alws.workers.dev/admin/messages"
-  );
-  const data = await res.json();
+const API = "https://contact-form-api.junior-webdev-alws.workers.dev";
+const ADMIN_KEY = "121212";
 
+async function loadMessages() {
+  const res = await fetch(`${API}/admin/messages`, {
+    headers: {
+      "x-admin-key": ADMIN_KEY
+    }
+  });
+
+  if (!res.ok) {
+    alert("Unauthorized");
+    return;
+  }
+
+  const data = await res.json();
   const tbody = document.getElementById("messages");
   tbody.innerHTML = "";
 
@@ -42,18 +53,38 @@ async function loadMessages() {
         <td>${m.email}</td>
         <td>${m.message}</td>
         <td>${m.created_at}</td>
+        <td>
+          <button onclick="deleteMessage(${m.id})">🗑️ Delete</button>
+        </td>
       </tr>
     `;
   });
+}
+
+async function deleteMessage(id) {
+  if (!confirm("Delete this message?")) return;
+
+  const res = await fetch(`${API}/admin/messages/${id}`, {
+    method: "DELETE",
+    headers: {
+      "x-admin-key": ADMIN_KEY
+    }
+  });
+
+  if (res.ok) {
+    loadMessages(); // refresh list
+  } else {
+    alert("Delete failed");
+  }
 }
 
 loadMessages();
 </script>
 
 
-
 </body>
 </html>
+
 
 
 
