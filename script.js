@@ -64,50 +64,7 @@ animateElements.forEach(el => {
     observer.observe(el);
 });
 
-// Contact Form Handling
-// Contact Form Handling
-const contactForm = document.getElementById("contactForm");
 
-if (contactForm) {
-  contactForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const formMessage = document.getElementById("formMessage");
-
-    const formData = {
-      name: this.name.value,
-      email: this.email.value,
-      message: this.message.value
-    };
-
-    try {
-      const response = await fetch(
-        "https://contact-form-api.junior-webdev-alws.workers.dev",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(formData)
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.success) {
-        formMessage.style.color = "green";
-        formMessage.textContent = "Message sent successfully!";
-        this.reset();
-      } else {
-        formMessage.style.color = "red";
-        formMessage.textContent = "Something went wrong.";
-      }
-    } catch (error) {
-      formMessage.style.color = "red";
-      formMessage.textContent = "Server error. Try again later.";
-    }
-  });
-}
 
 
 // FAQ Accordion
