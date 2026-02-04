@@ -1,0 +1,29 @@
+<h2>Admin Login</h2>
+
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<p id="status"></p>
+
+<script>
+const API = "https://contact-form-api.junior-webdev-alws.workers.dev";
+
+async function login() {
+  const password = document.getElementById("password").value;
+
+  const res = await fetch(`${API}/admin/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password })
+  });
+
+  if (!res.ok) {
+    document.getElementById("status").innerText = "Wrong password";
+    return;
+  }
+
+  const data = await res.json();
+  localStorage.setItem("adminToken", data.token);
+  window.location.href = "/admin.html";
+}
+</script>
