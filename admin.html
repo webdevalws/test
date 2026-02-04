@@ -13,60 +13,38 @@
 
 <h2>Contact Messages</h2>
 
-<table>
+<table border="1">
   <thead>
     <tr>
       <th>Name</th>
       <th>Email</th>
       <th>Message</th>
-      <th>Action</th>
+      <th>Date</th>
     </tr>
   </thead>
   <tbody id="messages"></tbody>
 </table>
 
 <script>
-const API = "https://contact-form-api.junior-webdev-alws.workers.dev";
-const ADMIN_KEY = "121212";
-
 async function loadMessages() {
-  const response = await fetch(`${API}/admin-data`, {
-    headers: { "x-admin-key": ADMIN_KEY }
-  });
+  const res = await fetch(
+    "https://contact-form-api.junior-webdev-alws.workers.dev/admin/messages"
+  );
+  const data = await res.json();
 
-  const data = await response.json();
-  const table = document.getElementById("messages");
-  table.innerHTML = "";
+  const tbody = document.getElementById("messages");
+  tbody.innerHTML = "";
 
-  data.forEach(msg => {
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${msg.name}</td>
-      <td>${msg.email}</td>
-      <td>${msg.message}</td>
-      <td>
-        <button onclick="deleteMessage('${msg.id}')">Delete</button>
-      </td>
+  data.forEach(m => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.message}</td>
+        <td>${m.created_at}</td>
+      </tr>
     `;
-
-    table.appendChild(row);
   });
-}
-
-async function deleteMessage(id) {
-  if (!confirm("Delete this message?")) return;
-
-  await fetch(`${API}/delete`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-key": ADMIN_KEY
-    },
-    body: JSON.stringify({ id })
-  });
-
-  loadMessages(); // refresh table
 }
 
 loadMessages();
@@ -76,6 +54,7 @@ loadMessages();
 
 </body>
 </html>
+
 
 
 
