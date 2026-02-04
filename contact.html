@@ -227,5 +227,32 @@
     </footer>
 
     <script src="script.js"></script>
+
+
+    <script>
+document.getElementById("contactForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const data = {
+    name: form.name.value,
+    email: form.email.value,
+    message: form.message.value
+  };
+
+  const res = await fetch(
+    "https://YOUR-WORKER.workers.dev/submit",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    }
+  );
+
+  alert("Message sent!");
+  form.reset();
+});
+</script>
+
 </body>
 </html>
