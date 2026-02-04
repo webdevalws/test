@@ -7,13 +7,17 @@
     table { width: 100%; border-collapse: collapse; }
     th, td { border: 1px solid #ddd; padding: 10px; }
     th { background: #f4f4f4; }
+    button { cursor: pointer; }
   </style>
 </head>
 <body>
 
 <h2>Contact Messages</h2>
+<button onclick="logout()">Logout</button>
 
-<table border="1">
+<br><br>
+
+<table>
   <thead>
     <tr>
       <th>Name</th>
@@ -28,17 +32,23 @@
 
 <script>
 const API = "https://contact-form-api.junior-webdev-alws.workers.dev";
-const ADMIN_KEY = "121212";
+
+// 🔐 Redirect if not logged in
+const token = localStorage.getItem("adminToken");
+if (!token) {
+  window.location.href = "/admin-login.html";
+}
 
 async function loadMessages() {
   const res = await fetch(`${API}/admin/messages`, {
     headers: {
-      "x-admin-key": ADMIN_KEY
+      "Authorization": token
     }
   });
 
-  if (!res.ok) {
-    alert("Unauthorized");
+  if (res.status === 401) {
+    alert("Session expired. Please login again.");
+    logout();
     return;
   }
 
@@ -67,27 +77,24 @@ async function deleteMessage(id) {
   const res = await fetch(`${API}/admin/messages/${id}`, {
     method: "DELETE",
     headers: {
-      "x-admin-key": ADMIN_KEY
+      "Authorization": token
     }
   });
 
   if (res.ok) {
-    loadMessages(); // refresh list
+    loadMessages();
   } else {
     alert("Delete failed");
   }
 }
 
+function logout() {
+  localStorage.removeItem("adminToken");
+  window.location.href = "/admin-login.html";
+}
+
 loadMessages();
 </script>
 
-
 </body>
 </html>
-
-
-
-
-
-
-
