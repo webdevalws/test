@@ -43,6 +43,8 @@ async function loadMessages() {
   const data = await response.json();
   const table = document.getElementById("messages");
 
+  table.innerHTML = ""; // clear old rows
+
   data.forEach(msg => {
     const row = `
       <tr>
@@ -58,7 +60,9 @@ async function loadMessages() {
 loadMessages();
 </script>
 
+
 </body>
 </html>
+
 
 
